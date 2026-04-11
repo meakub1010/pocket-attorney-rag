@@ -1,46 +1,49 @@
-pocket-attorney-rag/
+# 📦 RAG System Project Structure
+
+```text
+rag-system/
 │
 ├── app/
 │   ├── api/
 │   │   └── v1/
 │   │       └── endpoints/
-│   │           ├── query.py
-│   │           ├── ingestion.py
-│   │           └── health.py
+│   │           ├── query.py        # Handles user query requests
+│   │           ├── ingestion.py    # Handles document ingestion APIs
+│   │           └── health.py       # Health check endpoint
 │   │
 │   ├── core/
-│   │   ├── config.py
-│   │   ├── logging.py
-│   │   └── security.py
+│   │   ├── config.py              # App configuration (env, settings)
+│   │   ├── logging.py             # Logging setup
+│   │   └── security.py            # Auth, validation, security utils
 │   │
 │   ├── services/
-│   │   ├── rag/
-│   │   ├── ingestion/
-│   │   ├── memory/
-│   │   ├── llm/
-│   │   └── tools/
+│   │   ├── rag/                   # RAG pipeline (retrieval + generation)
+│   │   ├── ingestion/             # Data ingestion pipeline
+│   │   ├── memory/                # Session + conversation memory
+│   │   ├── llm/                   # LLM providers (Ollama, OpenAI, etc.)
+│   │   └── tools/                 # External tools (search, APIs)
 │   │
-│   ├── repositories/
-│   ├── models/
-│   ├── workers/
-│   ├── utils/
-│   └── main.py
+│   ├── repositories/              # Data access layer (DB, vector store)
+│   ├── models/                    # Pydantic schemas / domain models
+│   ├── workers/                   # Background jobs (async tasks)
+│   ├── utils/                     # Shared utilities/helpers
+│   └── main.py                    # FastAPI entrypoint
 │
 ├── tests/
-│   ├── unit/
-│   ├── integration/
-│   └── e2e/
+│   ├── unit/                      # Unit tests
+│   ├── integration/               # Integration tests
+│   └── e2e/                       # End-to-end tests
 │
 ├── scripts/
-│   ├── ingest_data.py
-│   └── rebuild_index.py
+│   ├── ingest_data.py             # CLI for ingestion
+│   └── rebuild_index.py           # Rebuild vector index
 │
 ├── docker/
-│   ├── Dockerfile
-│   └── docker-compose.yml
+│   ├── Dockerfile                 # Container definition
+│   └── docker-compose.yml         # Multi-service setup
 │
-├── pyproject.toml      🔥 (replaces requirements.txt)
-├── uv.lock             🔥 (auto-generated lockfile)
-├── .env
-├── .python-version     🔥 (optional, for Python version)
-└── README.md
+├── pyproject.toml                 # Project config & dependencies (uv)
+├── uv.lock                        # Locked dependency versions
+├── .env                           # Environment variables
+├── .python-version                # Python version (optional)
+└── README.md                      # Project documentation
