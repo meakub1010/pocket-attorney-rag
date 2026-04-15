@@ -1,7 +1,7 @@
 # 📦 RAG System Project Structure
 
 ```text
-rag-system/
+pocket-attorney-rag/
 │
 ├── app/
 │   ├── api/

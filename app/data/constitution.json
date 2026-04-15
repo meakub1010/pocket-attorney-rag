@@ -1,0 +1,135 @@
+[
+  {
+    "article": "Article 26",
+    "title": "Laws inconsistent with fundamental rights",
+    "text": "All existing laws inconsistent with the provisions of this Part shall become void to the extent of such inconsistency.",
+    "keywords": ["law", "fundamental rights", "void"],
+    "category": "Fundamental Rights"
+  },
+  {
+    "article": "Article 27",
+    "title": "Equality before law",
+    "text": "All citizens are equal before law and are entitled to equal protection of law.",
+    "keywords": ["equality", "law", "citizens"],
+    "category": "Fundamental Rights"
+  },
+  {
+    "article": "Article 28(1)",
+    "title": "Non-discrimination",
+    "text": "The State shall not discriminate against any citizen on grounds only of religion, race, caste, sex or place of birth.",
+    "keywords": ["discrimination", "religion", "race", "gender"],
+    "category": "Fundamental Rights"
+  },
+  {
+    "article": "Article 28(2)",
+    "title": "Equal rights for women",
+    "text": "Women shall have equal rights with men in all spheres of the State and public life.",
+    "keywords": ["women", "equality", "rights"],
+    "category": "Fundamental Rights"
+  },
+  {
+    "article": "Article 29",
+    "title": "Equality of opportunity",
+    "text": "There shall be equality of opportunity for all citizens in respect of employment or office in the service of the Republic.",
+    "keywords": ["employment", "opportunity", "equality"],
+    "category": "Fundamental Rights"
+  },
+  {
+    "article": "Article 31",
+    "title": "Protection of law",
+    "text": "To enjoy the protection of the law is the inalienable right of every citizen.",
+    "keywords": ["protection", "law", "rights"],
+    "category": "Fundamental Rights"
+  },
+  {
+    "article": "Article 32",
+    "title": "Right to life",
+    "text": "No person shall be deprived of life or personal liberty save in accordance with law.",
+    "keywords": ["life", "liberty", "law"],
+    "category": "Fundamental Rights"
+  },
+  {
+    "article": "Article 33",
+    "title": "Safeguards as to arrest",
+    "text": "No person shall be detained in custody without being informed of the grounds for such arrest.",
+    "keywords": ["arrest", "detention", "rights"],
+    "category": "Fundamental Rights"
+  },
+  {
+    "article": "Article 34",
+    "title": "Forced labour",
+    "text": "All forms of forced labour are prohibited and any contravention of this provision shall be an offence punishable in accordance with law.",
+    "keywords": ["forced labour", "prohibition"],
+    "category": "Fundamental Rights"
+  },
+  {
+    "article": "Article 35",
+    "title": "Protection in respect of trial",
+    "text": "No person shall be convicted of any offence except for violation of a law in force at the time of the commission of the act.",
+    "keywords": ["trial", "justice", "law"],
+    "category": "Fundamental Rights"
+  },
+  {
+    "article": "Article 36",
+    "title": "Freedom of movement",
+    "text": "Subject to reasonable restrictions, every citizen shall have the right to move freely throughout Bangladesh.",
+    "keywords": ["movement", "freedom"],
+    "category": "Fundamental Rights"
+  },
+  {
+    "article": "Article 37",
+    "title": "Freedom of assembly",
+    "text": "Every citizen shall have the right to assemble and participate in public meetings peacefully.",
+    "keywords": ["assembly", "freedom"],
+    "category": "Fundamental Rights"
+  },
+  {
+    "article": "Article 38",
+    "title": "Freedom of association",
+    "text": "Every citizen shall have the right to form associations or unions.",
+    "keywords": ["association", "union"],
+    "category": "Fundamental Rights"
+  },
+  {
+    "article": "Article 39",
+    "title": "Freedom of thought and expression",
+    "text": "Freedom of thought and conscience is guaranteed, as is freedom of speech and expression.",
+    "keywords": ["speech", "expression", "freedom"],
+    "category": "Fundamental Rights"
+  },
+  {
+    "article": "Article 40",
+    "title": "Freedom of profession",
+    "text": "Every citizen has the right to enter upon any lawful profession or occupation.",
+    "keywords": ["profession", "occupation"],
+    "category": "Fundamental Rights"
+  },
+  {
+    "article": "Article 41",
+    "title": "Freedom of religion",
+    "text": "Every citizen has the right to profess, practice or propagate any religion.",
+    "keywords": ["religion", "freedom"],
+    "category": "Fundamental Rights"
+  },
+  {
+    "article": "Article 42",
+    "title": "Right to property",
+    "text": "Every citizen shall have the right to acquire, hold, transfer or otherwise dispose of property.",
+    "keywords": ["property", "rights"],
+    "category": "Fundamental Rights"
+  },
+  {
+    "article": "Article 43",
+    "title": "Protection of home",
+    "text": "Every citizen shall have the right to be secure in his home against entry, search and seizure.",
+    "keywords": ["privacy", "home"],
+    "category": "Fundamental Rights"
+  },
+  {
+    "article": "Article 44",
+    "title": "Enforcement of fundamental rights",
+    "text": "The right to move the High Court Division for enforcement of fundamental rights is guaranteed.",
+    "keywords": ["court", "rights", "enforcement"],
+    "category": "Fundamental Rights"
+  }
+]
