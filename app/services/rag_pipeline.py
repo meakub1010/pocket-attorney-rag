@@ -37,7 +37,7 @@ class RagPipeline:
                 })
         embeddings = self.embedder.embed(self.chunks)
         print("embeddings: ", embeddings[:1])
-        self.vector_store = VectorStore(dim = len(embeddings[0]))
+        self.vector_store = VectorStore(dim = self.embedder.dim)
         self.vector_store.add(embeddings, self.metadata)
         print("vector store: ",self.vector_store)
 

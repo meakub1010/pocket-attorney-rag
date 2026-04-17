@@ -1,7 +1,12 @@
 import logging
+import time
+from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
+from langchain_community.cache import RedisCache
+
 from app.api.v1.router import api_router
+from app.cache.redis_client import get_redis, close_redis
 from app.core.config import settings
 from app.core.logger import setup_logger
 
@@ -11,10 +16,43 @@ setup_logger(settings.app_name)
 # ======== USE Logger ===========
 logger = logging.getLogger(settings.app_name)
 
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    start_time = time.time()
+    logger.info(f"{app.title} starting")
+    logger.info("Pocket Attorney RAG System API is running")
+    try:
+        logger.info("Initializing necessary things")
+    except Exception as e:
+        logger.error("Failed to initialize necessary things")
+        raise e
+
+    # REDIS
+    try:
+        redis_client = await get_redis()
+        logger.info(f"redis_client initialized successfully")
+        print(redis_client)
+    except Exception as e:
+        logger.error("Failed to initialize redis client & semantic cache")
+
+    yield
+    logger.info("Pocket Attorney RAG System API is shutting down")
+
+    # close REDIS
+    await close_redis()
+
+    try:
+        elapsed_time = time.time() - start_time
+        logger.info(f"Clean up complete. Uptime: {elapsed_time:.2f}s")
+    except Exception as e:
+        logger.error("Error during shutdown")
+
 app = FastAPI(
-    title="RAG System API",
+    title="Pocket Attorney System API",
     description="Pocket Attorney RAG System API",
     version="1.0.0",
+    lifespan=lifespan
 )
 
 
@@ -27,14 +65,14 @@ async def root():
     return {"status": "ok", "message": "Pocket Attorney RAG System API is running"}
 
 
-# ========= APP EVENTS ================
-@app.on_event("startup")
-async def startup():
-    logger.info("Pocket Attorney RAG System API is running")
-
-@app.on_event("shutdown")
-async def shutdown():
-    logger.info("Pocket Attorney RAG System API is shutting down")
+# # ========= APP EVENTS ================
+# @app.on_event("startup")
+# async def startup():
+#     logger.info("Pocket Attorney RAG System API is running")
+#
+# @app.on_event("shutdown")
+# async def shutdown():
+#     logger.info("Pocket Attorney RAG System API is shutting down")
 
 
 #

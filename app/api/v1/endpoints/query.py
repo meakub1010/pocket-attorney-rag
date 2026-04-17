@@ -7,6 +7,7 @@ from app.llm.base import BaseLLMProvider
 from app.llm.factory import get_llm_provider
 from app.llm.prompts.legal import build_legal_prompt
 from app.services.rag_pipeline import RagPipeline
+from app.utils.utility import extract_pdf_text, clean_text
 
 logger = logging.getLogger(settings.app_name)
 
@@ -50,3 +51,12 @@ async def ask_question(payload: dict, llm: BaseLLMProvider = Depends(get_llm_pro
 @router.post("/upload")
 async def upload_file(file: UploadFile = File(...)):
     logger.info(f"Upload file {file.filename}")
+    file_bytes = await file.read()
+    text = extract_pdf_text(file_bytes)
+    # print(text)
+    sanitized = clean_text(text)
+    print(sanitized)
+    return {
+        "filename": file.filename,
+        "length": len(text),
+    }

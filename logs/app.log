@@ -92,3 +92,80 @@
 2026-04-14 23:52:57 | INFO | pocket_attorney_rag | Logger initialized
 2026-04-14 23:52:57 | INFO | pocket_attorney_rag | Pocket Attorney RAG System API is running
 2026-04-15 00:09:38 | INFO | pocket_attorney_rag | Pocket Attorney RAG System API is shutting down
+2026-04-15 20:29:06 | INFO | pocket_attorney_rag | Logger initialized
+2026-04-15 20:29:06 | INFO | pocket_attorney_rag | Pocket Attorney RAG System API is running
+2026-04-15 20:29:20 | INFO | pocket_attorney_rag | Upload file constitution-part.pdf
+2026-04-15 20:33:33 | INFO | pocket_attorney_rag | Pocket Attorney RAG System API is shutting down
+2026-04-15 20:33:37 | INFO | pocket_attorney_rag | Logger initialized
+2026-04-15 20:33:37 | INFO | pocket_attorney_rag | Pocket Attorney RAG System API is running
+2026-04-15 20:40:41 | INFO | pocket_attorney_rag | Pocket Attorney RAG System API is shutting down
+2026-04-15 20:40:45 | INFO | pocket_attorney_rag | Logger initialized
+2026-04-15 20:40:45 | INFO | pocket_attorney_rag | RAG System API starting
+2026-04-15 20:40:45 | INFO | pocket_attorney_rag | Pocket Attorney RAG System API is running
+2026-04-15 20:40:45 | INFO | pocket_attorney_rag | Initializing necessary things
+2026-04-15 20:40:50 | INFO | pocket_attorney_rag | Pocket Attorney RAG System API is shutting down
+2026-04-15 20:40:50 | INFO | pocket_attorney_rag | Clean up complete. Uptime: 5.36s
+2026-04-15 20:40:55 | INFO | pocket_attorney_rag | Logger initialized
+2026-04-15 20:40:55 | INFO | pocket_attorney_rag | RAG System API starting
+2026-04-15 20:40:55 | INFO | pocket_attorney_rag | Pocket Attorney RAG System API is running
+2026-04-15 20:40:55 | INFO | pocket_attorney_rag | Initializing necessary things
+2026-04-15 20:41:59 | INFO | pocket_attorney_rag | Pocket Attorney RAG System API is shutting down
+2026-04-15 20:41:59 | INFO | pocket_attorney_rag | Clean up complete. Uptime: 63.55s
+2026-04-15 20:42:03 | INFO | pocket_attorney_rag | Logger initialized
+2026-04-15 20:42:03 | INFO | pocket_attorney_rag | RAG System API starting
+2026-04-15 20:42:03 | INFO | pocket_attorney_rag | Pocket Attorney RAG System API is running
+2026-04-15 20:42:03 | INFO | pocket_attorney_rag | Initializing necessary things
+2026-04-15 20:42:48 | INFO | pocket_attorney_rag | Pocket Attorney RAG System API is shutting down
+2026-04-15 20:42:48 | INFO | pocket_attorney_rag | Clean up complete. Uptime: 45.06s
+2026-04-15 20:42:51 | INFO | pocket_attorney_rag | Logger initialized
+2026-04-15 20:42:51 | INFO | pocket_attorney_rag | Pocket Attorney System API starting
+2026-04-15 20:42:51 | INFO | pocket_attorney_rag | Pocket Attorney RAG System API is running
+2026-04-15 20:42:51 | INFO | pocket_attorney_rag | Initializing necessary things
+2026-04-15 20:44:04 | INFO | pocket_attorney_rag | Pocket Attorney RAG System API is shutting down
+2026-04-15 20:44:04 | INFO | pocket_attorney_rag | Clean up complete. Uptime: 72.16s
+2026-04-15 21:00:15 | INFO | pocket_attorney_rag | Logger initialized
+2026-04-15 21:00:15 | INFO | pocket_attorney_rag | Pocket Attorney System API starting
+2026-04-15 21:00:15 | INFO | pocket_attorney_rag | Pocket Attorney RAG System API is running
+2026-04-15 21:00:15 | INFO | pocket_attorney_rag | Initializing necessary things
+2026-04-15 21:00:25 | INFO | pocket_attorney_rag | Upload file constitution-part.pdf
+2026-04-15 21:05:54 | INFO | pocket_attorney_rag | Pocket Attorney RAG System API is shutting down
+2026-04-15 21:05:54 | INFO | pocket_attorney_rag | Clean up complete. Uptime: 338.53s
+2026-04-15 21:05:59 | INFO | pocket_attorney_rag | Logger initialized
+2026-04-15 21:05:59 | INFO | pocket_attorney_rag | Pocket Attorney System API starting
+2026-04-15 21:05:59 | INFO | pocket_attorney_rag | Pocket Attorney RAG System API is running
+2026-04-15 21:05:59 | INFO | pocket_attorney_rag | Initializing necessary things
+2026-04-15 21:06:09 | INFO | pocket_attorney_rag | Upload file constitution-part.pdf
+2026-04-15 21:06:20 | INFO | pocket_attorney_rag | Upload file constitution.pdf
+2026-04-15 21:10:23 | INFO | pocket_attorney_rag | Pocket Attorney RAG System API is shutting down
+2026-04-15 21:10:23 | INFO | pocket_attorney_rag | Clean up complete. Uptime: 264.48s
+2026-04-15 21:10:28 | INFO | pocket_attorney_rag | Logger initialized
+2026-04-15 21:10:28 | INFO | pocket_attorney_rag | Pocket Attorney System API starting
+2026-04-15 21:10:28 | INFO | pocket_attorney_rag | Pocket Attorney RAG System API is running
+2026-04-15 21:10:28 | INFO | pocket_attorney_rag | Initializing necessary things
+2026-04-15 21:11:38 | INFO | pocket_attorney_rag | Pocket Attorney RAG System API is shutting down
+2026-04-15 21:11:38 | INFO | pocket_attorney_rag | Clean up complete. Uptime: 70.84s
+2026-04-15 21:11:43 | INFO | pocket_attorney_rag | Logger initialized
+2026-04-15 21:11:43 | INFO | pocket_attorney_rag | Pocket Attorney System API starting
+2026-04-15 21:11:43 | INFO | pocket_attorney_rag | Pocket Attorney RAG System API is running
+2026-04-15 21:11:43 | INFO | pocket_attorney_rag | Initializing necessary things
+2026-04-15 21:11:50 | INFO | pocket_attorney_rag | Upload file constitution.pdf
+2026-04-15 21:15:42 | INFO | pocket_attorney_rag | Pocket Attorney RAG System API is shutting down
+2026-04-15 21:15:42 | INFO | pocket_attorney_rag | Clean up complete. Uptime: 238.46s
+2026-04-15 21:15:47 | INFO | pocket_attorney_rag | Logger initialized
+2026-04-15 21:15:47 | INFO | pocket_attorney_rag | Pocket Attorney System API starting
+2026-04-15 21:15:47 | INFO | pocket_attorney_rag | Pocket Attorney RAG System API is running
+2026-04-15 21:15:47 | INFO | pocket_attorney_rag | Initializing necessary things
+2026-04-15 21:16:25 | INFO | pocket_attorney_rag | Pocket Attorney RAG System API is shutting down
+2026-04-15 21:16:25 | INFO | pocket_attorney_rag | Clean up complete. Uptime: 38.60s
+2026-04-15 21:16:30 | INFO | pocket_attorney_rag | Logger initialized
+2026-04-15 21:16:30 | INFO | pocket_attorney_rag | Pocket Attorney System API starting
+2026-04-15 21:16:30 | INFO | pocket_attorney_rag | Pocket Attorney RAG System API is running
+2026-04-15 21:16:30 | INFO | pocket_attorney_rag | Initializing necessary things
+2026-04-15 21:17:46 | INFO | pocket_attorney_rag | Pocket Attorney RAG System API is shutting down
+2026-04-15 21:17:46 | INFO | pocket_attorney_rag | Clean up complete. Uptime: 75.59s
+2026-04-15 21:17:50 | INFO | pocket_attorney_rag | Logger initialized
+2026-04-15 21:17:50 | INFO | pocket_attorney_rag | Pocket Attorney System API starting
+2026-04-15 21:17:50 | INFO | pocket_attorney_rag | Pocket Attorney RAG System API is running
+2026-04-15 21:17:50 | INFO | pocket_attorney_rag | Initializing necessary things
+2026-04-16 21:29:52 | INFO | pocket_attorney_rag | Pocket Attorney RAG System API is shutting down
+2026-04-16 21:29:52 | INFO | pocket_attorney_rag | Clean up complete. Uptime: 87121.74s

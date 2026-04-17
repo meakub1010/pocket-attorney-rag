@@ -19,6 +19,8 @@ dependencies = [
     "beautifulsoup4",
     "python-multipart",
     "typing-extensions>=4.15.0",
+    "pypdf>=6.10.2",
+    "redis>=7.4.0",
 ]
 
 [project.optional-dependencies]

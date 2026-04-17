@@ -1,5 +1,10 @@
+import os
 from typing import Literal
+
+from dotenv import load_dotenv
 from pydantic.v1 import BaseSettings
+
+load_dotenv()
 
 class Settings(BaseSettings):
     env: str = 'development'
@@ -17,6 +22,10 @@ class Settings(BaseSettings):
     #Anthropic
     ANTHROPIC_API_KEY: str = ""
     ANTHROPIC_MODEL: str = "claude-sonnet-4-5"
+
+    #REDIS
+    REDIS_URL: str = f"{os.getenv("REDIS_HOST")}:{os.getenv("REDIS_PORT")}"
+
 
     # ======= app name ===========
     app_name: str = 'pocket_attorney_rag'
