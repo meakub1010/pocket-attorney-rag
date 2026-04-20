@@ -7,8 +7,12 @@ from langchain_community.cache import RedisCache
 
 from app.api.v1.router import api_router
 from app.cache.redis_client import get_redis, close_redis
+from app.cache.semantic_cache import SemanticCache
 from app.core.config import settings
 from app.core.logger import setup_logger
+from app.services.chunking.factory import get_chunker
+from app.services.embedding import EmbeddingService
+from app.services.rag_pipeline import RagPipeline
 
 # ============= initialize logger ONCE when app starts
 setup_logger(settings.app_name)
@@ -29,12 +33,16 @@ async def lifespan(app: FastAPI):
         raise e
 
     # REDIS
-    try:
-        redis_client = await get_redis()
-        logger.info(f"redis_client initialized successfully")
-        print(redis_client)
-    except Exception as e:
-        logger.error("Failed to initialize redis client & semantic cache")
+    redis_client = await get_redis()
+    chunker = get_chunker()
+    embedder = EmbeddingService()
+    rag_pipeline = RagPipeline(embedder, chunker)
+    semantic_cache = SemanticCache(redis_client, rag_pipeline.embedder)
+
+    app.state.chunker = chunker
+    app.state.embedder = embedder
+    app.state.rag_pipeline = rag_pipeline
+    app.state.semantic_cache = semantic_cache
 
     yield
     logger.info("Pocket Attorney RAG System API is shutting down")

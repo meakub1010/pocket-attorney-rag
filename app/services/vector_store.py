@@ -13,7 +13,7 @@ class VectorStore:
         self.index.add(embeddings)
         self.metadata.extend(metadata)
 
-    def search(self, query_embedding, k = 5, threshold = 0.20):
+    def search(self, query_embedding, k = 5, threshold = 0.45):
         query_embedding = np.array(query_embedding).astype('float32')
         faiss.normalize_L2(query_embedding)
         if len(query_embedding.shape) == 1:

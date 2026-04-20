@@ -13,6 +13,14 @@ Category: {d['category']}
 
     context = "\n\n---\n\n".join(context_blocks)
 
+    # return f"""
+    # Context:
+    # {context}
+    #
+    # Question:
+    # {question}
+    # """
+
     return f"""
 You are a legal assistant.
 
@@ -28,5 +36,5 @@ Rules:
 - Cite article numbers (e.g., Article 28(2))
 - Do not add information not in context
 - If not found, say "Not found in provided context"
-- Keep answer clear and concise
+- Make sure you elaborate the answer to make it more readable
 """

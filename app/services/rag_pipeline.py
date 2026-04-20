@@ -1,5 +1,9 @@
 import json
-
+# import redis.asyncio as redis
+#
+# from app.cache import redis_client
+# from app.cache.redis_client import get_redis
+# from app.cache.semantic_cache import SemanticCache
 from app.services.chunking.base import BaseChunker
 from app.services.chunking.factory import get_chunker
 from app.services.embedding import EmbeddingService
@@ -7,10 +11,12 @@ from app.services.vector_store import VectorStore
 
 
 class RagPipeline:
-    def __init__(self):
-        self.embedder = EmbeddingService()
-        self.chunker: BaseChunker = get_chunker()
-
+    def __init__(self, embedder: EmbeddingService, chunker: BaseChunker):
+        self.embedder = embedder #EmbeddingService()
+        self.chunker: BaseChunker = chunker #get_chunker()
+        # self.redis: redis.Redis = get_redis()
+        # self.cache = SemanticCache(self.redis, self.embedder)
+        # print("Cache", self.cache)
         # load data
         with open("app/data/constitution.json") as f:
             self.data = json.load(f)
@@ -41,8 +47,10 @@ class RagPipeline:
         self.vector_store.add(embeddings, self.metadata)
         print("vector store: ",self.vector_store)
 
-    def query(self, question):
+    async def query(self, question):
         q_embedding = self.embedder.embed([question])
         results = self.vector_store.search(q_embedding)
 
-        return results
+        # set to cache
+        # await self.cache.set(q_embedding, results)
+        return results, q_embedding
