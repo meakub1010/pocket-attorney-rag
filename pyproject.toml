@@ -28,3 +28,6 @@ dev = [
     "pytest",
     "pytest-asyncio",
 ]
+
+[project.scripts]
+build-index = "app.ingestion.build_index"

@@ -1,3 +1,6 @@
+import json
+import os
+
 import faiss
 import numpy as np
 
@@ -37,3 +40,36 @@ class VectorStore:
                 "score": score
             })
         return results
+
+    def save(self, path: str):
+        os.makedirs(os.path.dirname(path), exist_ok=True)
+        # save faiss index
+        faiss.write_index(self.index, f"{path}/index.faiss")
+
+        # save metadata
+        with open(f"{path}/metadata.json", "w") as f:
+            json.dump(self.metadata, f)
+        print("Index saved")
+
+    def load(self, path: str):
+        index_file = f"{path}/index.faiss"
+        metadata_file = f"{path}/metadata.json"
+
+        if not os.path.exists(index_file):
+            raise FileNotFoundError(f"FAISS index file not found: {index_file}")
+
+        if not os.path.exists(metadata_file):
+            raise FileNotFoundError(f"Metadata file not found: {metadata_file}")
+
+        self.index = faiss.read_index(index_file)
+
+        with open(metadata_file, "r") as f:
+            self.metadata = json.load(f)
+
+        if self.index.ntotal != len(self.metadata):
+            raise ValueError(
+                f"❌ Mismatch: index has {self.index.ntotal} vectors "
+                f"but metadata has {len(self.metadata)} entries"
+            )
+
+        print(f"✅ Index loaded successfully")

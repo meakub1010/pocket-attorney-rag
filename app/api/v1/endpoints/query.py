@@ -16,18 +16,20 @@ from app.utils.utility import extract_pdf_text, clean_text
 logger = logging.getLogger(settings.app_name)
 
 router = APIRouter()
-# rag = RagPipeline()
 
-# cache = SemanticCache()
+def get_container(request: Request):
+    return request.app.state.container
+
 
 @router.get("/hello")
 async def hello_world():
     return {"message": "Hello Ishmael"}
 
 @router.post("/ask")
-async def ask_question(payload: dict, request: Request, llm: BaseLLMProvider = Depends(get_llm_provider)):
+async def ask_question(payload: dict, container = Depends(get_container)):
     question = payload.get("question")
-    results, q_embedding = await request.app.state.rag_pipeline.query(question)
+    # results, q_embedding = await request.app.state.rag_pipeline.query(question)
+    results, q_embedding = await container.rag_pipeline.query(question)
     print('q_embedding', q_embedding)
     if not results:
         return {
@@ -37,7 +39,8 @@ async def ask_question(payload: dict, request: Request, llm: BaseLLMProvider = D
     # here results are related docs that will be context to LLM
     prompt = build_legal_prompt(question, results)
     print("PROMPT: ", prompt)
-    llm_response:LLMResponse = await llm.complete(prompt)
+    # llm_response:LLMResponse = await llm.complete(prompt)
+    llm_response:LLMResponse = await container.llm.complete(prompt)
 
     formatter_response = LLMFormatter.format_to_markdown(llm_response.content)
     results_normalized = [
@@ -54,7 +57,8 @@ async def ask_question(payload: dict, request: Request, llm: BaseLLMProvider = D
         ]
     ans_text = getattr(llm_response, "content", str(llm_response))
     #await request.app.state.semantic_cache.set(q_embedding, ans_text)
-    await request.app.state.semantic_cache.set_safe(q_embedding, ans_text)
+    # await request.app.state.semantic_cache.set_safe(q_embedding, ans_text)
+    await container.semantic_cache.set_safe(q_embedding, ans_text)
     return {
         "question": question,
          "answer": formatter_response["answer_markdown"],

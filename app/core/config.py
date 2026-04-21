@@ -30,6 +30,7 @@ class Settings(BaseSettings):
     # ======= app name ===========
     app_name: str = 'pocket_attorney_rag'
 
+    index_path: str = 'app/index_store'
     chunker_type: str = "langchain" # simple | langchain
     chunker_size: int = 300
     chunk_overlap: int = 50

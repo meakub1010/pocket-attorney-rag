@@ -3,13 +3,14 @@ import time
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
-from langchain_community.cache import RedisCache
 
 from app.api.v1.router import api_router
 from app.cache.redis_client import get_redis, close_redis
 from app.cache.semantic_cache import SemanticCache
 from app.core.config import settings
+from app.core.container import AppContainer
 from app.core.logger import setup_logger
+from app.llm.factory import get_llm_provider
 from app.services.chunking.factory import get_chunker
 from app.services.embedding import EmbeddingService
 from app.services.rag_pipeline import RagPipeline
@@ -25,32 +26,44 @@ logger = logging.getLogger(settings.app_name)
 async def lifespan(app: FastAPI):
     start_time = time.time()
     logger.info(f"{app.title} starting")
-    logger.info("Pocket Attorney RAG System API is running")
     try:
         logger.info("Initializing necessary things")
+        # REDIS
+        redis_client = await get_redis()
+        chunker = get_chunker()
+        embedder = EmbeddingService()
+        rag_pipeline = RagPipeline(embedder, chunker, settings.index_path)
+        semantic_cache = SemanticCache(redis_client, rag_pipeline.embedder)
+        llm_client = get_llm_provider()
+
+        container = AppContainer(
+            llm = llm_client,
+            rag_pipeline=rag_pipeline,
+            redis=redis_client,
+            semantic_cache=semantic_cache,
+            embedder=embedder,
+            chunker=chunker,
+        )
+
+        # app.state.chunker = chunker
+        # app.state.embedder = embedder
+        # app.state.rag_pipeline = rag_pipeline
+        # app.state.semantic_cache = semantic_cache
+        app.state.container = container
+        logger.info(f"All services has been initialized")
     except Exception as e:
-        logger.error("Failed to initialize necessary things")
+        logger.error("Failed to initialize necessary services")
         raise e
-
-    # REDIS
-    redis_client = await get_redis()
-    chunker = get_chunker()
-    embedder = EmbeddingService()
-    rag_pipeline = RagPipeline(embedder, chunker)
-    semantic_cache = SemanticCache(redis_client, rag_pipeline.embedder)
-
-    app.state.chunker = chunker
-    app.state.embedder = embedder
-    app.state.rag_pipeline = rag_pipeline
-    app.state.semantic_cache = semantic_cache
-
     yield
-    logger.info("Pocket Attorney RAG System API is shutting down")
-
-    # close REDIS
-    await close_redis()
-
     try:
+        logger.info("Pocket Attorney RAG System API is shutting down")
+
+        # close REDIS
+        await close_redis()
+
+        # llm close
+        if hasattr(llm_client, "close"):
+            await llm_client.close()
         elapsed_time = time.time() - start_time
         logger.info(f"Clean up complete. Uptime: {elapsed_time:.2f}s")
     except Exception as e:
