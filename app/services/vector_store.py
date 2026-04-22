@@ -33,6 +33,7 @@ class VectorStore:
 
             meta = self.metadata[idx]
             results.append({
+                "id": meta.get("id", idx),
                 "answer": meta.get("chunk", ""),
                 "article": meta.get("article", ""),
                 "title": meta.get("title", ""),
@@ -49,7 +50,7 @@ class VectorStore:
         # save metadata
         with open(f"{path}/metadata.json", "w") as f:
             json.dump(self.metadata, f)
-        print("Index saved")
+        print("FAISS Index saved")
 
     def load(self, path: str):
         index_file = f"{path}/index.faiss"

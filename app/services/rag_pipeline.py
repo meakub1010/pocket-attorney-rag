@@ -1,4 +1,8 @@
 import json
+
+from numpy.f2py.symbolic import normalize
+
+from app.services.bm25_store import BM25Store
 # import redis.asyncio as redis
 #
 # from app.cache import redis_client
@@ -19,6 +23,8 @@ class RagPipeline:
         # print("Cache", self.cache)
 
         self.vector_store: VectorStore = VectorStore(dim=self.embedder.dim)
+        self.bm25_store: BM25Store = BM25Store()
+
         self.metadata = []
         self.index_path = index_path
         self._load_index()
@@ -27,6 +33,8 @@ class RagPipeline:
     def _load_index(self):
         try:
             self.vector_store.load(self.index_path)
+
+            self.bm25_store.load(self.index_path)
         except Exception as e:
             raise e
 
@@ -64,8 +72,55 @@ class RagPipeline:
 
     async def query(self, question):
         q_embedding = self.embedder.embed([question])
-        results = self.vector_store.search(q_embedding)
+        vector_results = self.vector_store.search(q_embedding)
+
+        bm25_results = self.bm25_store.search(question)
+        print("BM25 results: ", bm25_results)
+
+        combined = {}
+        alpha = 0.7
+
+        # normalize scores
+        v_scores = normalize(r["score"] for r in vector_results)
+        b_scores = normalize(r["bm25_score"] for r in bm25_results)
+
+        # -------------------
+        # Add vector results
+        # -------------------
+        for r, s in zip(vector_results, v_scores):
+            key = r["id"]
+            combined[key] = {**r, "v_score": s, "b_score": 0}
+
+        # -------------------
+        # Add BM25 results
+        # -------------------
+        for r, s in zip(bm25_results, b_scores):
+            key = r["id"]
+
+            if key in combined:
+                combined[key]["b_score"] = s
+            else:
+                combined[key] = {**r, "v_score": 0, "b_score": s}
+
+        # -------------------
+        # Final scoring
+        # -------------------
+        for item in combined.values():
+            item["final_score"] = (
+                    alpha * item["v_score"] +
+                    (1 - alpha) * item["b_score"]
+            )
+
+        # sort + top k
+        results = sorted(
+            combined.values(),
+            key=lambda x: x["final_score"],
+            reverse=True
+        )
+
+        print(f"combined results: \n\n", results)
+
 
         # set to cache
         # await self.cache.set(q_embedding, results)
-        return results, q_embedding
+        return results[:3], q_embedding
