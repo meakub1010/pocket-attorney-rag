@@ -72,16 +72,26 @@ class RagPipeline:
 
     async def query(self, question):
         q_embedding = self.embedder.embed([question])
-        vector_results = self.vector_store.search(q_embedding)
+        vector_results = self.vector_store.search(q_embedding, k=10)
 
-        bm25_results = self.bm25_store.search(question)
+        bm25_results = self.bm25_store.search(question, k=10)
+
+        print("length: ", len(vector_results), len(bm25_results))
+
         print("BM25 results: ", bm25_results)
 
+
+        # Fallback safety
+        if not vector_results:
+            return bm25_results
+        if not bm25_results:
+            return vector_results
+
         combined = {}
-        alpha = 0.7
+        alpha = 0.5
 
         # normalize scores
-        v_scores = normalize(r["score"] for r in vector_results)
+        v_scores = normalize(r["faiss_score"] for r in vector_results)
         b_scores = normalize(r["bm25_score"] for r in bm25_results)
 
         # -------------------
@@ -116,11 +126,11 @@ class RagPipeline:
             combined.values(),
             key=lambda x: x["final_score"],
             reverse=True
-        )
+        )[:3]
 
         print(f"combined results: \n\n", results)
 
 
         # set to cache
         # await self.cache.set(q_embedding, results)
-        return results[:3], q_embedding
+        return results, q_embedding

@@ -28,8 +28,8 @@ class VectorStore:
             if idx < 0 or idx >= len(self.metadata):
                 continue
             score = float(scores[0][i])
-            if score < threshold:
-                continue
+            # if score < threshold:
+            #     continue
 
             meta = self.metadata[idx]
             results.append({
@@ -38,7 +38,7 @@ class VectorStore:
                 "article": meta.get("article", ""),
                 "title": meta.get("title", ""),
                 "category": meta.get("category", ""),
-                "score": score
+                "faiss_score": score
             })
         return results
 

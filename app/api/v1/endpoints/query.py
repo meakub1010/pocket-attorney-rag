@@ -43,6 +43,9 @@ async def ask_question(payload: dict, container = Depends(get_container)):
     llm_response:LLMResponse = await container.llm.complete(prompt)
 
     formatter_response = LLMFormatter.format_to_markdown(llm_response.content)
+
+    print("results: ", results)
+
     results_normalized = [
             {
                 #"answer": formatter_response["answer_markdown"],
@@ -50,7 +53,10 @@ async def ask_question(payload: dict, container = Depends(get_container)):
                 #"model": llm_response.model,
                 "source": result["article"],
                 "category": result["category"],
-                "score": result["score"],
+                "score": float(result.get("final_score") or
+                               result.get("vector_score") or
+                               result.get("bm25_score") or
+                               0.0), #result["final_score"],
                 #"usage": llm_response.usage,
             }
             for result in results
