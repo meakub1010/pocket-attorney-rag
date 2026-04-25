@@ -7,5 +7,5 @@ class EmbeddingService:
 
     def embed(self, texts):
         embedding = self.model.encode(texts)
-        print(embedding)
+        # print(embedding)
         return embedding

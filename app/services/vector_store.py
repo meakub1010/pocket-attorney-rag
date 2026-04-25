@@ -1,8 +1,11 @@
 import json
+import logging
 import os
 
 import faiss
 import numpy as np
+
+logger = logging.getLogger(__name__)
 
 class VectorStore:
     def __init__(self, dim):
@@ -22,7 +25,6 @@ class VectorStore:
         if len(query_embedding.shape) == 1:
             query_embedding = query_embedding.reshape(1, -1)
         scores, indices = self.index.search(query_embedding, k)
-        print("scores: ", scores[:1])
         results = []
         for i, idx in enumerate(indices[0]):
             if idx < 0 or idx >= len(self.metadata):
@@ -40,6 +42,7 @@ class VectorStore:
                 "category": meta.get("category", ""),
                 "faiss_score": score
             })
+        logger.info("vector results", results)
         return results
 
     def save(self, path: str):

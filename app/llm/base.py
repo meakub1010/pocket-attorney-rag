@@ -13,6 +13,6 @@ class BaseLLMProvider(ABC):
     @abstractmethod
     async def stream(self, prompt: str, **kwargs) -> LLMResponse:
         pass
-    @abstractmethod
-    async def embed(self, text: str) -> list[float]:
-        pass
+    # @abstractmethod
+    # async def embed(self, text: str) -> list[float]:
+    #     pass

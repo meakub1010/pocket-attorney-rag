@@ -1,7 +1,10 @@
 import json
+import logging
 import os
 
 from rank_bm25 import BM25Okapi
+
+logger = logging.getLogger(__name__)
 
 class BM25Store:
     def __init__(self):
@@ -35,7 +38,7 @@ class BM25Store:
                 "category": self.metadata[idx].get("category", ""),
                 "bm25_score": scores[idx]
             })
-
+        logger.debug(f"BM25 search results: {results}")
         return results
 
     def save(self, save_path):

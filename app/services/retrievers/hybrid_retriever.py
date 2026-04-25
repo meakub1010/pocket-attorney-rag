@@ -1,4 +1,6 @@
+import logging
 
+logger = logging.getLogger(__name__)
 
 class HybridRetriever:
     def __init__(self, vector_store, bm25_store, embedder):
@@ -13,24 +15,34 @@ class HybridRetriever:
         bm25_results = self.bm25_store.search(query, k)
 
         print("length: ", len(vector_results), len(bm25_results))
-        print("BM25 results: ", bm25_results)
+
+        print("Vector results: \n", vector_results)
+        print("BM25 results: \n", bm25_results)
 
         # Fallback safety
         if not vector_results:
-            return bm25_results
+            return bm25_results, q_embedding
         if not bm25_results:
-            return vector_results
-
+            return vector_results, q_embedding
         combined = {}
         alpha = 0.5
 
         # normalize scores
         def normalize(scores):
+            scores = list(scores)  # ensure list
+
+            if not scores:
+                return []
+
             min_s, max_s = min(scores), max(scores)
+
+            if max_s == min_s:
+                return [1.0] * len(scores)
+
             return [(s - min_s) / (max_s - min_s + 1e-6) for s in scores]
 
-        v_scores = normalize(r["faiss_score"] for r in vector_results)
-        b_scores = normalize(r["bm25_score"] for r in bm25_results)
+        v_scores = normalize([r["faiss_score"] for r in vector_results])
+        b_scores = normalize([r["bm25_score"] for r in bm25_results])
 
         # -------------------
         # Add vector results
@@ -64,9 +76,9 @@ class HybridRetriever:
             combined.values(),
             key=lambda x: x["final_score"],
             reverse=True
-        )[:3]
+        )[:8]
 
-        print(f"combined results: \n\n", results)
+        print(f"hybrid retriever: \n\n", results)
 
         # set to cache
         # await self.cache.set(q_embedding, results)

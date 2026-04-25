@@ -42,13 +42,13 @@ class OllamaProvider(BaseLLMProvider):
                         if not data.get("done"):
                             yield data.get("response", "")
 
-    async def embed(self, text: str) -> list[float]:
-        async with httpx.AsyncClient() as client:
-            response = await client.post(
-                f"{self.base_url}/api/embeddings",
-                json={"model": self.model, "prompt": text},
-            )
-            return response.json()["embedding"]
+    # async def embed(self, text: str) -> list[float]:
+    #     async with httpx.AsyncClient() as client:
+    #         response = await client.post(
+    #             f"{self.base_url}/api/embeddings",
+    #             json={"model": self.model, "prompt": text},
+    #         )
+    #         return response.json()["embedding"]
 
 
 

@@ -11,9 +11,12 @@ from app.core.config import settings
 from app.core.container import AppContainer
 from app.core.logger import setup_logger
 from app.llm.factory import get_llm_provider
+from app.services.bm25_store import BM25Store
 from app.services.chunking.factory import get_chunker
 from app.services.embedding import EmbeddingService
 from app.services.rag_pipeline import RagPipeline
+from app.services.retrievers.hybrid_retriever import HybridRetriever
+from app.services.vector_store import VectorStore
 
 # ============= initialize logger ONCE when app starts
 setup_logger(settings.app_name)
@@ -32,8 +35,18 @@ async def lifespan(app: FastAPI):
         redis_client = await get_redis()
         chunker = get_chunker()
         embedder = EmbeddingService()
-        rag_pipeline = RagPipeline(embedder, chunker, settings.index_path)
-        semantic_cache = SemanticCache(redis_client, rag_pipeline.embedder)
+
+        vector_store = VectorStore(dim=embedder.dim)
+        vector_store.load(settings.index_path)
+
+        bm25_store = BM25Store()
+        bm25_store.load(settings.index_path)
+
+        retriever = HybridRetriever(vector_store, bm25_store, embedder)
+
+        rag_pipeline = RagPipeline(retriever)
+
+        semantic_cache = SemanticCache(redis_client, embedder)
         llm_client = get_llm_provider()
 
         container = AppContainer(
@@ -43,12 +56,9 @@ async def lifespan(app: FastAPI):
             semantic_cache=semantic_cache,
             embedder=embedder,
             chunker=chunker,
+            retriever = retriever
         )
 
-        # app.state.chunker = chunker
-        # app.state.embedder = embedder
-        # app.state.rag_pipeline = rag_pipeline
-        # app.state.semantic_cache = semantic_cache
         app.state.container = container
         logger.info(f"All services has been initialized")
     except Exception as e:
