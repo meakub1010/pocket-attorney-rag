@@ -47,3 +47,20 @@ pocket-attorney-rag/
 ├── .env                           # Environment variables
 ├── .python-version                # Python version (optional)
 └── README.md                      # Project documentation
+
+
+
+- POSTGRES PgAdmin login
+conntect to server
+any name
+host: db
+password:admin
+port: 5432
+
+- Sample user
+{
+  "first_name": "Ishmael",
+  "last_name": "Muhammad",
+  "email": "ishmael@example.com",
+  "password": "User@1234"
+}

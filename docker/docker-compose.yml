@@ -1,6 +1,28 @@
 version: "3.9"
 
+name: pocket-attorney-rag
 services:
+  db:
+    image: postgres:15
+    container_name: rag-postgres
+    restart: always
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: ragdb
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: rag-pgadmin
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: meakub86@gmail.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "5050:80"
   redis:
     image: redis:alpine3.23
     container_name: rag-redis
@@ -14,3 +36,4 @@ services:
 
 volumes:
   redis-data:
+  postgres_data:

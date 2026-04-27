@@ -10,6 +10,7 @@ from app.cache.semantic_cache import SemanticCache
 from app.core.config import settings
 from app.core.container import AppContainer
 from app.core.logger import setup_logger
+from app.db.session import engine, Base
 from app.llm.factory import get_llm_provider
 from app.services.bm25_store import BM25Store
 from app.services.chunking.factory import get_chunker
@@ -17,6 +18,8 @@ from app.services.embedding import EmbeddingService
 from app.services.rag_pipeline import RagPipeline
 from app.services.retrievers.hybrid_retriever import HybridRetriever
 from app.services.vector_store import VectorStore
+
+from app.models import user
 
 # ============= initialize logger ONCE when app starts
 setup_logger(settings.app_name)
@@ -31,6 +34,8 @@ async def lifespan(app: FastAPI):
     logger.info(f"{app.title} starting")
     try:
         logger.info("Initializing necessary things")
+        #POSTGRES
+        Base.metadata.create_all(bind=engine)
         # REDIS
         redis_client = await get_redis()
         chunker = get_chunker()

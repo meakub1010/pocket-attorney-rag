@@ -26,6 +26,13 @@ class Settings(BaseSettings):
     #REDIS
     REDIS_URL: str = f"{os.getenv("REDIS_HOST")}:{os.getenv("REDIS_PORT")}"
 
+    # POSTGRES DB
+    DATABASE_URL: str = os.getenv("DATABASE_URL")
+
+    # OIDC and OAuth
+    ALGORITHM: str = os.getenv("ALGORITHM")
+    ACCESS_TOKEN_EXPIRE_MINUTES: int = os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES")
+    SECRET_KEY: str = os.getenv("SECRET_KEY")
 
     # ======= app name ===========
     app_name: str = 'pocket_attorney_rag'
