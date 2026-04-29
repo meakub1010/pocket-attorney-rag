@@ -12,7 +12,7 @@ class OllamaProvider(BaseLLMProvider):
 
     async def _post(self, endpoint: str, payload: dict):
         url = f"{self.base_url}{endpoint}"
-        print(url)
+        print("calling: ", url)
         response = await self.client.post(url, json=payload)
         response.raise_for_status()
         return response.json()
@@ -28,7 +28,6 @@ class OllamaProvider(BaseLLMProvider):
         #     return LLMResponse(content=data["response"], model= self.model)
         endpoint = "/api/generate"
         data = await self._post(endpoint, {"model": self.model, "prompt": prompt, "stream": False})
-        print(data)
         return LLMResponse(content=data.get("response", ""), model=self.model, usage=data.get("usage", None))
 
     async def stream(self, prompt: str, **kwargs):

@@ -3,29 +3,35 @@ import logging
 logger = logging.getLogger(__name__)
 
 class HybridRetriever:
-    def __init__(self, vector_store, bm25_store, embedder):
+    def __init__(self, vector_store, bm25_store, embedder, cache):
         self.vector_store = vector_store
         self.bm25_store = bm25_store
         self.embedder = embedder
+        self.cache = cache
 
-    def retrieve(self, query, k = 10):
+    async def retrieve(self, query, k = 10):
         q_embedding = self.embedder.embed([query])
+        # if self.cache:
+        #     cached_results, q_embedding = await self.cache.get(query)
+        #     print("Cached results: ", cached_results, q_embedding)
+        #     if cached_results:
+        #         print("Cache hit")
+        #         return cached_results, q_embedding
+
         vector_results = self.vector_store.search(q_embedding, k)
 
         bm25_results = self.bm25_store.search(query, k)
 
-        print("length: ", len(vector_results), len(bm25_results))
-
-        print("Vector results: \n", vector_results)
-        print("BM25 results: \n", bm25_results)
+        vector_results = [r for r in vector_results if r.get("faiss_score") is not None and r["faiss_score"] > 0.3] # tune: 0.25 - 0.4
 
         # Fallback safety
         if not vector_results:
-            return bm25_results, q_embedding
+            return bm25_results[:3], q_embedding
         if not bm25_results:
-            return vector_results, q_embedding
+            return vector_results[:3], q_embedding
         combined = {}
-        alpha = 0.5
+
+        alpha = 0.7 # favor FAISS
 
         # normalize scores
         def normalize(scores):
@@ -71,16 +77,48 @@ class HybridRetriever:
                     (1 - alpha) * item["b_score"]
             )
 
-        # sort + top k
+        all_items = list(combined.values())
+
+        if not all_items:
+            return [], q_embedding
+
+        # -------------------
+        # Step 7: Threshold filtering (MOST IMPORTANT)
+        # -------------------
+        max_score = max(item["final_score"] for item in all_items)
+
+        # Dynamic threshold (key improvement)
+        threshold = max_score * 0.6  # tune: 0.5–0.7
+
+        filtered = [
+            item for item in all_items
+            if item["final_score"] >= threshold
+        ]
+
+        # -------------------
+        # Step 8: Fallback safety
+        # -------------------
+        if len(filtered) < 2:
+            filtered = sorted(
+                all_items,
+                key=lambda x: x["final_score"],
+                reverse=True
+            )[:2]
+
+        # -------------------
+        # Step 9: Final Top-K (small context for LLM)
+        # -------------------
         results = sorted(
-            combined.values(),
+            filtered,
             key=lambda x: x["final_score"],
             reverse=True
-        )[:8]
+        )[:3]
 
-        print(f"hybrid retriever: \n\n", results)
-
+        print(f"\nHybrid Retriever Final Results:\n", results)
         # set to cache
-        # await self.cache.set(q_embedding, results)
+        # await self.cache.set_safe(q_embedding, results)
         return results, q_embedding
+
+
+        # return results, q_embedding
 

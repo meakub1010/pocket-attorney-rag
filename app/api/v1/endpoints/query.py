@@ -23,6 +23,14 @@ async def hello_world():
 @router.post("/ask")
 async def ask_question(payload: dict, container = Depends(get_container)):
     question = payload.get("question")
+
+    cached_results, q_embedding = await container.semantic_cache.get(question)
+
+    if cached_results:
+        return cached_results
+
+    print("Cache MISS")
+
     results, q_embedding = await container.rag_pipeline.query(question)
     if not results:
         return {
@@ -52,15 +60,18 @@ async def ask_question(payload: dict, container = Depends(get_container)):
             for result in results
         ]
     ans_text = getattr(llm_response, "content", str(llm_response))
-    await container.semantic_cache.set_safe(q_embedding, ans_text)
-    return {
+
+    # await self.cache.set_safe(q_embedding, ans_text)
+    final_result = {
         "question": question,
-         "answer": formatter_response["answer_markdown"],
+        "answer": formatter_response["answer_markdown"],
         # "raw_answer": formatter_response["answer_text"],
         "model": llm_response.model,
         "usage": llm_response.usage,
         "sources": results_normalized,
     }
+    await container.semantic_cache.set_safe(q_embedding, final_result)
+    return final_result
 
 
 @router.post("/upload")

@@ -6,8 +6,10 @@ import uuid
 import faiss
 import numpy as np
 
-from langchain_classic.vectorstores import redis
+# from langchain_classic.vectorstores import redis
+import redis.asyncio as redis
 
+from app.cache.serializer import make_json_safe
 from app.core.config import settings
 from app.services.embedding import EmbeddingService
 
@@ -35,25 +37,28 @@ class SemanticCache:
         q_vec = self.embedder.embed([query])
         q_vec = np.array(q_vec).astype('float32')
         faiss.normalize_L2(q_vec)
+        print("index length: ", self.index.ntotal)
         if self.index.ntotal == 0:
             return None, q_vec
 
         scores, indices = self.index.search(q_vec, 1)
         score = float(scores[0][0])
         idx = int(indices[0][0])
-
+        print("fetch cache: ", score, self.similarity_threshold, idx)
         if idx != -1 and score >= self.similarity_threshold:
             cache_id = self.id_map[idx]
-            data = await self.redis_client.get_by_ids(cache_id)
+            print("cache id: ", cache_id)
+            data = await self.redis_client.get(f"cache:{cache_id}")
+            print("cached data: ", data)
             if data:
-                return json.load(data), q_vec
+                return json.loads(data), q_vec
 
         return None, q_vec
 
     async def set(self, query_vec, answer):
         print("redis cache")
         cache_id = str(uuid.uuid4())[:12]
-        print(cache_id)
+        print("set cache id: ", cache_id)
         query_vec = np.array(query_vec).astype("float32")
         await self.redis_client.set(
             f"cache:{cache_id}",
@@ -67,15 +72,17 @@ class SemanticCache:
 
         # REDIS Write (safe + timeout)
         async def redis_task():
+            safe_answer = make_json_safe(answer)
             try:
-                await asyncio.wait_for(
-                    self.redis_client.set(
-                        f"cache:{cache_id}",
-                        json.dumps(answer),
-                    ),
-                    timeout=0.5)
+                print("set cache id: cache:", cache_id)
+                #//await asyncio.wait_for(
+                await self.redis_client.set(
+                    f"cache:{cache_id}",
+                    json.dumps(safe_answer),
+                )#,
+                    #timeout=0.5)
             except Exception as e:
-                self.logger.warning("Redis log failed!\n", e)
+                self.logger.error(f"Redis log failed!\n{e}", exc_info=True)
 
         # Index update
         def index_task():
