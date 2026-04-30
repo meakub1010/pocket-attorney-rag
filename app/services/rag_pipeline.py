@@ -1,18 +1,16 @@
 import logging
 
-from app.core import container
-
 logger = logging.getLogger(__name__)
 
 class RagPipeline:
-    def __init__(self, retriever, cache):
+    def __init__(self, retriever, embedder):
         self.retriever = retriever
-        self.cache = cache
+        self.embedder = embedder
 
-    async def query(self, question):
+    async def retrieve(self, question, q_embedding):
+        results = await self.retriever.retrieve(question, q_embedding)
+        logger.info("Results: %s", results)
+        return results
 
-
-        results, q_embedding = await self.retriever.retrieve(question)
-        logger.info("Results: ", results)
-        print("Results: ", results)
-        return results, q_embedding
+    def embed(self, question):
+        return self.embedder.embed(question)

@@ -15,6 +15,7 @@ from app.llm.factory import get_llm_provider
 from app.services.bm25_store import BM25Store
 from app.services.chunking.factory import get_chunker
 from app.services.embedding import EmbeddingService
+from app.services.query_service import QueryService
 from app.services.rag_pipeline import RagPipeline
 from app.services.retrievers.hybrid_retriever import HybridRetriever
 from app.services.vector_store import VectorStore
@@ -48,10 +49,11 @@ async def lifespan(app: FastAPI):
         bm25_store.load(settings.index_path)
 
         semantic_cache = SemanticCache(redis_client, embedder)
-        retriever = HybridRetriever(vector_store, bm25_store, embedder, cache=semantic_cache)
+        retriever = HybridRetriever(vector_store, bm25_store)
 
-        rag_pipeline = RagPipeline(retriever, semantic_cache)
+        rag_pipeline = RagPipeline(retriever, embedder)
         llm_client = get_llm_provider()
+        query_service = QueryService(semantic_cache, rag_pipeline, llm_client)
 
         container = AppContainer(
             llm = llm_client,
@@ -60,7 +62,8 @@ async def lifespan(app: FastAPI):
             semantic_cache=semantic_cache,
             embedder=embedder,
             chunker=chunker,
-            retriever = retriever
+            retriever = retriever,
+            query_service = query_service,
         )
 
         app.state.container = container

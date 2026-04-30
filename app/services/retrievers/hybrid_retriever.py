@@ -3,32 +3,21 @@ import logging
 logger = logging.getLogger(__name__)
 
 class HybridRetriever:
-    def __init__(self, vector_store, bm25_store, embedder, cache):
+    def __init__(self, vector_store, bm25_store):
         self.vector_store = vector_store
         self.bm25_store = bm25_store
-        self.embedder = embedder
-        self.cache = cache
 
-    async def retrieve(self, query, k = 10):
-        q_embedding = self.embedder.embed([query])
-        # if self.cache:
-        #     cached_results, q_embedding = await self.cache.get(query)
-        #     print("Cached results: ", cached_results, q_embedding)
-        #     if cached_results:
-        #         print("Cache hit")
-        #         return cached_results, q_embedding
-
+    async def retrieve(self, question, q_embedding, k = 10):
         vector_results = self.vector_store.search(q_embedding, k)
 
-        bm25_results = self.bm25_store.search(query, k)
-
+        bm25_results = self.bm25_store.search(question, k)
         vector_results = [r for r in vector_results if r.get("faiss_score") is not None and r["faiss_score"] > 0.3] # tune: 0.25 - 0.4
 
         # Fallback safety
         if not vector_results:
-            return bm25_results[:3], q_embedding
+            return bm25_results[:3]
         if not bm25_results:
-            return vector_results[:3], q_embedding
+            return vector_results[:3]
         combined = {}
 
         alpha = 0.7 # favor FAISS
@@ -80,7 +69,7 @@ class HybridRetriever:
         all_items = list(combined.values())
 
         if not all_items:
-            return [], q_embedding
+            return []
 
         # -------------------
         # Step 7: Threshold filtering (MOST IMPORTANT)
@@ -113,12 +102,5 @@ class HybridRetriever:
             key=lambda x: x["final_score"],
             reverse=True
         )[:3]
-
-        print(f"\nHybrid Retriever Final Results:\n", results)
-        # set to cache
-        # await self.cache.set_safe(q_embedding, results)
-        return results, q_embedding
-
-
-        # return results, q_embedding
+        return results
 

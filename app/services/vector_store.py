@@ -20,15 +20,24 @@ class VectorStore:
         self.metadata.extend(metadata)
 
     def search(self, query_embedding, k = 5, threshold = 0.45):
+        if self.index.ntotal == 0:
+            return []
+
         query_embedding = np.array(query_embedding).astype('float32')
-        faiss.normalize_L2(query_embedding)
+
         if len(query_embedding.shape) == 1:
             query_embedding = query_embedding.reshape(1, -1)
+
+        faiss.normalize_L2(query_embedding)
+
         scores, indices = self.index.search(query_embedding, k)
+
         results = []
+
         for i, idx in enumerate(indices[0]):
             if idx < 0 or idx >= len(self.metadata):
                 continue
+
             score = float(scores[0][i])
             # if score < threshold:
             #     continue
@@ -42,7 +51,7 @@ class VectorStore:
                 "category": meta.get("category", ""),
                 "faiss_score": score
             })
-        logger.info("vector results", results)
+        logger.info("vector_results_count=%d", len(results))
         return results
 
     def save(self, path: str):

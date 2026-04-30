@@ -6,7 +6,6 @@ import uuid
 import faiss
 import numpy as np
 
-# from langchain_classic.vectorstores import redis
 import redis.asyncio as redis
 
 from app.cache.serializer import make_json_safe
@@ -31,34 +30,28 @@ class SemanticCache:
         self.max_size = max_cache_size
         self.index = faiss.IndexFlatIP(embedder.dim)
         self.id_map = []
-        self.embedder = embedder
+        # self.embedder = embedder
 
-    async def get(self, query: str):
-        q_vec = self.embedder.embed([query])
+    async def get(self, q_vec: str):
         q_vec = np.array(q_vec).astype('float32')
         faiss.normalize_L2(q_vec)
         print("index length: ", self.index.ntotal)
         if self.index.ntotal == 0:
-            return None, q_vec
+            return None
 
         scores, indices = self.index.search(q_vec, 1)
         score = float(scores[0][0])
         idx = int(indices[0][0])
-        print("fetch cache: ", score, self.similarity_threshold, idx)
         if idx != -1 and score >= self.similarity_threshold:
             cache_id = self.id_map[idx]
-            print("cache id: ", cache_id)
             data = await self.redis_client.get(f"cache:{cache_id}")
-            print("cached data: ", data)
             if data:
-                return json.loads(data), q_vec
+                return json.loads(data)
 
-        return None, q_vec
+        return None
 
     async def set(self, query_vec, answer):
-        print("redis cache")
         cache_id = str(uuid.uuid4())[:12]
-        print("set cache id: ", cache_id)
         query_vec = np.array(query_vec).astype("float32")
         await self.redis_client.set(
             f"cache:{cache_id}",
@@ -75,12 +68,10 @@ class SemanticCache:
             safe_answer = make_json_safe(answer)
             try:
                 print("set cache id: cache:", cache_id)
-                #//await asyncio.wait_for(
                 await self.redis_client.set(
                     f"cache:{cache_id}",
                     json.dumps(safe_answer),
-                )#,
-                    #timeout=0.5)
+                )
             except Exception as e:
                 self.logger.error(f"Redis log failed!\n{e}", exc_info=True)
 
