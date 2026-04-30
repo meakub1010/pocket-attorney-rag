@@ -7,6 +7,7 @@ from app.utils.llm_formatter import LLMFormatter
 
 logger = logging.getLogger(__name__)
 
+
 class QueryService:
     def __init__(self, cache, rag_pipeline, llm):
         self.cache = cache
@@ -26,10 +27,7 @@ class QueryService:
 
         results = await self.rag_pipeline.retrieve(question, q_embedding)
         if not results:
-            return {
-                "question": question,
-                "answers": []
-            }
+            return {"question": question, "answers": []}
 
         prompt = build_legal_prompt(question, results)
         llm_response: LLMResponse = await self.llm.complete(prompt)
@@ -42,10 +40,12 @@ class QueryService:
                 "source": result["article"],
                 "docs": result["answer"],
                 "category": result["category"],
-                "score": float(result.get("final_score") or
-                               result.get("vector_score") or
-                               result.get("bm25_score") or
-                               0.0),
+                "score": float(
+                    result.get("final_score")
+                    or result.get("vector_score")
+                    or result.get("bm25_score")
+                    or 0.0
+                ),
             }
             for result in results
         ]
@@ -59,6 +59,3 @@ class QueryService:
         await self.cache.set_safe(q_embedding, final_result)
         logger.info("llm_called_and_cached")
         return final_result
-
-
-

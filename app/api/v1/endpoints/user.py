@@ -15,16 +15,17 @@ logger = logging.getLogger(__name__)
 router = APIRouter()
 
 
-
 class TokenResponse(BaseModel):
     access_token: str
     token_type: str
+
 
 @router.post("/register", response_model=UserOut)
 def register(user: UserCreate, db: Session = Depends(get_db)):
     # logger.info(f"Registering user {user}")
     print(f"Registering user: \n {user}")
     return create_user(db, user.first_name, user.last_name, user.email, user.password)
+
 
 @router.post("/login", response_model=TokenResponse)
 def login(user: UserLogin, db: Session = Depends(get_db)):
@@ -40,7 +41,8 @@ def login(user: UserLogin, db: Session = Depends(get_db)):
         "token_type": "bearer",
     }
 
+
 @router.get("/users", response_model=list[UserOut])
-def list_users(db: Session = Depends(get_db), current_user = Depends(get_current_user)):
+def list_users(db: Session = Depends(get_db), current_user=Depends(get_current_user)):
     print(f"Current user: {current_user}")
     return get_users(db)

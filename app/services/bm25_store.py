@@ -6,6 +6,7 @@ from rank_bm25 import BM25Okapi
 
 logger = logging.getLogger(__name__)
 
+
 class BM25Store:
     def __init__(self):
         self.tokenized_corpus = []
@@ -30,14 +31,16 @@ class BM25Store:
 
         results = []
         for idx in top_indices:
-            results.append({
-                "id": idx,
-                "answer": self.metadata[idx].get("chunk", ""),
-                "article": self.metadata[idx].get("article", ""),
-                "title": self.metadata[idx].get("title", ""),
-                "category": self.metadata[idx].get("category", ""),
-                "bm25_score": scores[idx]
-            })
+            results.append(
+                {
+                    "id": idx,
+                    "answer": self.metadata[idx].get("chunk", ""),
+                    "article": self.metadata[idx].get("article", ""),
+                    "title": self.metadata[idx].get("title", ""),
+                    "category": self.metadata[idx].get("category", ""),
+                    "bm25_score": scores[idx],
+                }
+            )
         logger.debug(f"BM25 search results: {results}")
         return results
 

@@ -15,13 +15,12 @@ from app.services.embedding import EmbeddingService
 
 class SemanticCache:
     def __init__(
-            self,
-            redis_client: redis.Redis,
-            embedder: EmbeddingService,
-            similarity_threshold: float = 0.92,
-            ttl_seconds: int = 300,
-            max_cache_size: int = 10_000,
-
+        self,
+        redis_client: redis.Redis,
+        embedder: EmbeddingService,
+        similarity_threshold: float = 0.92,
+        ttl_seconds: int = 300,
+        max_cache_size: int = 10_000,
     ):
         self.redis_client = redis_client
         self.logger = logging.getLogger(settings.app_name)
@@ -33,7 +32,7 @@ class SemanticCache:
         # self.embedder = embedder
 
     async def get(self, q_vec: str):
-        q_vec = np.array(q_vec).astype('float32')
+        q_vec = np.array(q_vec).astype("float32")
         faiss.normalize_L2(q_vec)
         print("index length: ", self.index.ntotal)
         if self.index.ntotal == 0:
@@ -86,5 +85,3 @@ class SemanticCache:
 
         await redis_task()
         index_task()
-
-

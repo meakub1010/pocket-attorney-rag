@@ -1,6 +1,15 @@
-
 class AppContainer:
-    def __init__(self, llm, rag_pipeline, redis, semantic_cache, embedder, chunker, retriever, query_service):
+    def __init__(
+        self,
+        llm,
+        rag_pipeline,
+        redis,
+        semantic_cache,
+        embedder,
+        chunker,
+        retriever,
+        query_service,
+    ):
         self.llm = llm
         self.rag_pipeline = rag_pipeline
         self.redis = redis

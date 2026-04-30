@@ -2,6 +2,7 @@ import logging
 
 logger = logging.getLogger(__name__)
 
+
 class RagPipeline:
     def __init__(self, retriever, embedder):
         self.retriever = retriever

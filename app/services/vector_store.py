@@ -7,23 +7,24 @@ import numpy as np
 
 logger = logging.getLogger(__name__)
 
+
 class VectorStore:
     def __init__(self, dim):
         # self.index = faiss.IndexFlatL2(dim) # euclidian distance
-        self.index = faiss.IndexFlatIP(dim) # cosine similarity
+        self.index = faiss.IndexFlatIP(dim)  # cosine similarity
         self.metadata = []
 
     def add(self, embeddings, metadata):
-        embeddings = np.array(embeddings).astype('float32')
+        embeddings = np.array(embeddings).astype("float32")
         faiss.normalize_L2(embeddings)
         self.index.add(embeddings)
         self.metadata.extend(metadata)
 
-    def search(self, query_embedding, k = 5, threshold = 0.45):
+    def search(self, query_embedding, k=5, threshold=0.45):
         if self.index.ntotal == 0:
             return []
 
-        query_embedding = np.array(query_embedding).astype('float32')
+        query_embedding = np.array(query_embedding).astype("float32")
 
         if len(query_embedding.shape) == 1:
             query_embedding = query_embedding.reshape(1, -1)
@@ -43,14 +44,16 @@ class VectorStore:
             #     continue
 
             meta = self.metadata[idx]
-            results.append({
-                "id": meta.get("id", idx),
-                "answer": meta.get("chunk", ""),
-                "article": meta.get("article", ""),
-                "title": meta.get("title", ""),
-                "category": meta.get("category", ""),
-                "faiss_score": score
-            })
+            results.append(
+                {
+                    "id": meta.get("id", idx),
+                    "answer": meta.get("chunk", ""),
+                    "article": meta.get("article", ""),
+                    "title": meta.get("title", ""),
+                    "category": meta.get("category", ""),
+                    "faiss_score": score,
+                }
+            )
         logger.info("vector_results_count=%d", len(results))
         return results
 

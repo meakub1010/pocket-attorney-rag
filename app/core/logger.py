@@ -21,7 +21,7 @@ def setup_logger(name: str = "pocket_attorney_rag") -> logging.Logger:
     else:
         formatter = logging.Formatter(
             fmt="%(asctime)s | %(levelname)s | %(name)s | %(message)s",
-            datefmt="%Y-%m-%d %H:%M:%S"
+            datefmt="%Y-%m-%d %H:%M:%S",
         )
 
     # =============== console handler ============

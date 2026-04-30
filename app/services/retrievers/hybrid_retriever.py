@@ -2,16 +2,21 @@ import logging
 
 logger = logging.getLogger(__name__)
 
+
 class HybridRetriever:
     def __init__(self, vector_store, bm25_store):
         self.vector_store = vector_store
         self.bm25_store = bm25_store
 
-    async def retrieve(self, question, q_embedding, k = 10):
+    async def retrieve(self, question, q_embedding, k=10):
         vector_results = self.vector_store.search(q_embedding, k)
 
         bm25_results = self.bm25_store.search(question, k)
-        vector_results = [r for r in vector_results if r.get("faiss_score") is not None and r["faiss_score"] > 0.3] # tune: 0.25 - 0.4
+        vector_results = [
+            r
+            for r in vector_results
+            if r.get("faiss_score") is not None and r["faiss_score"] > 0.3
+        ]  # tune: 0.25 - 0.4
 
         # Fallback safety
         if not vector_results:
@@ -20,7 +25,7 @@ class HybridRetriever:
             return vector_results[:3]
         combined = {}
 
-        alpha = 0.7 # favor FAISS
+        alpha = 0.7  # favor FAISS
 
         # normalize scores
         def normalize(scores):
@@ -62,8 +67,7 @@ class HybridRetriever:
         # -------------------
         for item in combined.values():
             item["final_score"] = (
-                    alpha * item["v_score"] +
-                    (1 - alpha) * item["b_score"]
+                alpha * item["v_score"] + (1 - alpha) * item["b_score"]
             )
 
         all_items = list(combined.values())
@@ -79,28 +83,18 @@ class HybridRetriever:
         # Dynamic threshold (key improvement)
         threshold = max_score * 0.6  # tune: 0.5–0.7
 
-        filtered = [
-            item for item in all_items
-            if item["final_score"] >= threshold
-        ]
+        filtered = [item for item in all_items if item["final_score"] >= threshold]
 
         # -------------------
         # Step 8: Fallback safety
         # -------------------
         if len(filtered) < 2:
-            filtered = sorted(
-                all_items,
-                key=lambda x: x["final_score"],
-                reverse=True
-            )[:2]
+            filtered = sorted(all_items, key=lambda x: x["final_score"], reverse=True)[
+                :2
+            ]
 
         # -------------------
         # Step 9: Final Top-K (small context for LLM)
         # -------------------
-        results = sorted(
-            filtered,
-            key=lambda x: x["final_score"],
-            reverse=True
-        )[:3]
+        results = sorted(filtered, key=lambda x: x["final_score"], reverse=True)[:3]
         return results
-

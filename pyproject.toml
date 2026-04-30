@@ -38,3 +38,8 @@ dev = [
 
 [project.scripts]
 build-index = "app.ingestion.build_index"
+
+[dependency-groups]
+dev = [
+    "ruff>=0.15.12",
+]

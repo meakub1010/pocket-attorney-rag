@@ -9,17 +9,21 @@ logger = logging.getLogger(settings.app_name)
 
 router = APIRouter()
 
+
 def get_container(request: Request):
     return request.app.state.container
+
 
 @router.get("/hello")
 async def hello_world():
     return {"message": "Hello Ishmael"}
 
+
 @router.post("/ask")
-async def ask_question(payload: dict, container = Depends(get_container)):
+async def ask_question(payload: dict, container=Depends(get_container)):
     question = payload.get("question")
     return await container.query_service.ask(question)
+
 
 @router.post("/upload")
 async def upload_file(file: UploadFile = File(...)):

@@ -35,7 +35,7 @@ async def lifespan(app: FastAPI):
     logger.info(f"{app.title} starting")
     try:
         logger.info("Initializing necessary things")
-        #POSTGRES
+        # POSTGRES
         Base.metadata.create_all(bind=engine)
         # REDIS
         redis_client = await get_redis()
@@ -56,14 +56,14 @@ async def lifespan(app: FastAPI):
         query_service = QueryService(semantic_cache, rag_pipeline, llm_client)
 
         container = AppContainer(
-            llm = llm_client,
+            llm=llm_client,
             rag_pipeline=rag_pipeline,
             redis=redis_client,
             semantic_cache=semantic_cache,
             embedder=embedder,
             chunker=chunker,
-            retriever = retriever,
-            query_service = query_service,
+            retriever=retriever,
+            query_service=query_service,
         )
 
         app.state.container = container
@@ -86,17 +86,19 @@ async def lifespan(app: FastAPI):
     except Exception as e:
         logger.error("Error during shutdown")
 
+
 app = FastAPI(
     title="Pocket Attorney System API",
     description="Pocket Attorney RAG System API",
     version="1.0.0",
-    lifespan=lifespan
+    lifespan=lifespan,
 )
 
 
 app.include_router(api_router, prefix="/api/v1")
 
 # quick health check
+
 
 @app.get("/")
 async def root():

@@ -8,7 +8,9 @@ class OllamaProvider(BaseLLMProvider):
     def __init__(self, base_url: str, aimodel: str):
         self.base_url = base_url
         self.model = aimodel
-        self.client = httpx.AsyncClient(timeout=httpx.Timeout(connect=5, read=180.0, write=15.0, pool=5.0))
+        self.client = httpx.AsyncClient(
+            timeout=httpx.Timeout(connect=5, read=180.0, write=15.0, pool=5.0)
+        )
 
     async def _post(self, endpoint: str, payload: dict):
         url = f"{self.base_url}{endpoint}"
@@ -27,14 +29,22 @@ class OllamaProvider(BaseLLMProvider):
         #     data = response.json()
         #     return LLMResponse(content=data["response"], model= self.model)
         endpoint = "/api/generate"
-        data = await self._post(endpoint, {"model": self.model, "prompt": prompt, "stream": False})
-        return LLMResponse(content=data.get("response", ""), model=self.model, usage=data.get("usage", None))
+        data = await self._post(
+            endpoint, {"model": self.model, "prompt": prompt, "stream": False}
+        )
+        return LLMResponse(
+            content=data.get("response", ""),
+            model=self.model,
+            usage=data.get("usage", None),
+        )
 
     async def stream(self, prompt: str, **kwargs):
         async with httpx.AsyncClient() as client:
-            async with client.stream("POST", f"{self.base_url}/api/generate",
-                                     json={"model": self.model, "prompt": prompt, "stream": True}
-                                     ) as response:
+            async with client.stream(
+                "POST",
+                f"{self.base_url}/api/generate",
+                json={"model": self.model, "prompt": prompt, "stream": True},
+            ) as response:
                 async for line in response.aiter_lines():
                     if line:
                         data = json.loads(line)
@@ -48,6 +58,3 @@ class OllamaProvider(BaseLLMProvider):
     #             json={"model": self.model, "prompt": text},
     #         )
     #         return response.json()["embedding"]
-
-
-

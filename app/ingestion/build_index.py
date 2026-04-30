@@ -12,6 +12,7 @@ from app.services.vector_store import VectorStore
 # uv run python -m app.ingestion.build_index
 # script has been registered as project.scripts in toml
 
+
 def build_index(data_path: str, save_path: str):
     embedder = EmbeddingService()
     chunker = get_chunker()
@@ -24,20 +25,22 @@ def build_index(data_path: str, save_path: str):
 
     for item in data:
         text = f"""
-                    {item['article']}
-                    {item['title']}
-                    {item['text']}
+                    {item["article"]}
+                    {item["title"]}
+                    {item["text"]}
                     """
         doc_chunks = chunker.split(text)
         for chunk in doc_chunks:
             chunks.append(chunk)
-            metadata.append({
-                "chunk": chunk,
-                "keywords": item.get("keywords", []),
-                "article": item['article'],
-                "title": item['title'],
-                "category": item['category'],
-            })
+            metadata.append(
+                {
+                    "chunk": chunk,
+                    "keywords": item.get("keywords", []),
+                    "article": item["article"],
+                    "title": item["title"],
+                    "category": item["category"],
+                }
+            )
     # embeddings = embedder.embed(chunks) # update to embed_batch
     # vector_store = VectorStore(dim=embedder.dim)
     # vector_store.add(embeddings, metadata)
@@ -89,12 +92,9 @@ def build_bm25_index(chunks, metadata, save_path):
     # print("BM25 Index saved")
 
 
-
 def main():
-    build_index(
-        data_path="app/data/constitution.json",
-        save_path="app/index_store"
-    )
+    build_index(data_path="app/data/constitution.json", save_path="app/index_store")
+
 
 if __name__ == "__main__":
     main()

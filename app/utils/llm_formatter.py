@@ -1,8 +1,8 @@
 import re
 from typing import Dict
 
-class LLMFormatter:
 
+class LLMFormatter:
     @staticmethod
     def format_to_markdown(text: str) -> Dict:
         """
@@ -39,5 +39,5 @@ class LLMFormatter:
         return {
             "answer_markdown": markdown.strip(),
             "answer_text": text,
-            "has_bullets": len(bullets) > 0
+            "has_bullets": len(bullets) > 0,
         }

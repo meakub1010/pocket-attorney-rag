@@ -44,13 +44,15 @@ def scrape_constitution():
             if not text:
                 continue  # skip empty entries
 
-            articles.append({
-                "article": article,
-                "title": title,
-                "text": text,
-                "keywords": [],
-                "category": "Constitution"
-            })
+            articles.append(
+                {
+                    "article": article,
+                    "title": title,
+                    "text": text,
+                    "keywords": [],
+                    "category": "Constitution",
+                }
+            )
 
         except Exception as e:
             print("Skipping block due to error:", e)

@@ -1,13 +1,12 @@
-
 def build_legal_prompt(question: str, docs: list[dict]) -> str:
     context_blocks = []
 
     for d in docs:
         block = f"""
-{d['article']} - {d['title']}
-Category: {d['category']}
+{d["article"]} - {d["title"]}
+Category: {d["category"]}
 
-{d['answer']}
+{d["answer"]}
 """
         context_blocks.append(block.strip())
 
