@@ -29,7 +29,6 @@ class SemanticCache:
         self.max_size = max_cache_size
         self.index = faiss.IndexFlatIP(embedder.dim)
         self.id_map = []
-        # self.embedder = embedder
 
     async def get(self, q_vec: str):
         q_vec = np.array(q_vec).astype("float32")
@@ -62,26 +61,38 @@ class SemanticCache:
     async def set_safe(self, query_vec, answer):
         cache_id = str(uuid.uuid4())[:12]
 
-        # REDIS Write (safe + timeout)
-        async def redis_task():
+        try:
+            # prepare data
+            query_vec_np = np.array(query_vec).astype("float32")
+            faiss.normalize_L2(query_vec_np)
+        except (TypeError, ValueError) as e:
+            self.logger.warning("Failed preparing data for caching!", exc_info=True)
+            return
+
+        # REDIS write
+        try:
             safe_answer = make_json_safe(answer)
-            try:
-                print("set cache id: cache:", cache_id)
-                await self.redis_client.set(
-                    f"cache:{cache_id}",
-                    json.dumps(safe_answer),
-                )
-            except Exception as e:
-                self.logger.error(f"Redis log failed!\n{e}", exc_info=True)
+            await self.redis_client.set(
+                f"cache:{cache_id}",
+                json.dumps(safe_answer),
+                ex=self.ttl,
+            )
+        except redis.exceptions.RedisError as e:
+            self.logger.warning("Redis write failed!", exc_info=True)
+            return
 
-        # Index update
-        def index_task():
-            try:
-                query_vec_np = np.array(query_vec).astype("float32")
-                self.index.add(query_vec_np)
-                self.id_map.append(cache_id)
-            except Exception:
-                self.logger.warning("Index update failed", exc_info=True)
+        # save index and id map
+        try:
+            if query_vec_np.dtype != "float32":
+                raise ValueError("Embedding must be float32")
 
-        await redis_task()
-        index_task()
+            if query_vec_np.ndim != 2:
+                raise ValueError("Embedding must be 2D [n, dim]")
+
+            if query_vec_np.shape[1] != self.index.d:
+                raise ValueError("Embedding dimension mismatch")
+
+            self.index.add(query_vec_np)
+            self.id_map.append(cache_id)
+        except Exception as e:
+            self.logger.warning("Index update failed", exc_info=True)
