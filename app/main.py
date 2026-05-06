@@ -1,8 +1,13 @@
 import logging
 import time
+
+import os
+
+
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
+from pinecone import Pinecone
 
 from app.api.v1.router import api_router
 from app.cache.redis_client import get_redis, close_redis
@@ -15,11 +20,15 @@ from app.llm.factory import get_llm_provider
 from app.services.bm25_store import BM25Store
 from app.services.chunking.factory import get_chunker
 from app.services.embedding import EmbeddingService
+from app.services.pinecone_store import PineconeStore
 from app.services.query_service import QueryService
 from app.services.rag_pipeline import RagPipeline
 from app.services.retrievers.hybrid_retriever import HybridRetriever
 from app.services.vector_store import VectorStore
 
+from dotenv import load_dotenv
+
+load_dotenv()
 from app.models import user
 
 # ============= initialize logger ONCE when app starts
@@ -45,6 +54,8 @@ async def lifespan(app: FastAPI):
         vector_store = VectorStore(dim=embedder.dim)
         vector_store.load(settings.index_path)
 
+        pinecone = Pinecone(api_key=os.getenv("PINECONE_API_KEY"))
+        pinecone_store = PineconeStore(pinecone, "kb-index", embedder)
         bm25_store = BM25Store()
         bm25_store.load(settings.index_path)
 
@@ -64,6 +75,7 @@ async def lifespan(app: FastAPI):
             chunker=chunker,
             retriever=retriever,
             query_service=query_service,
+            pinecone_store = pinecone_store
         )
 
         app.state.container = container

@@ -9,6 +9,7 @@ class AppContainer:
         chunker,
         retriever,
         query_service,
+        pinecone_store
     ):
         self.llm = llm
         self.rag_pipeline = rag_pipeline
@@ -18,3 +19,4 @@ class AppContainer:
         self.chunker = chunker
         self.retriever = retriever
         self.query_service = query_service
+        self.pinecone_store = pinecone_store

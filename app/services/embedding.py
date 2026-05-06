@@ -7,6 +7,6 @@ class EmbeddingService:
         self.dim = self.model.get_sentence_embedding_dimension()
 
     def embed(self, texts):
-        embedding = self.model.encode(texts)
+        embedding = self.model.encode(texts).tolist()
         # print(embedding)
         return embedding

@@ -20,9 +20,10 @@ async def hello_world():
 
 
 @router.post("/ask")
-async def ask_question(payload: dict, container=Depends(get_container)):
+def ask_question(payload: dict, container=Depends(get_container)):
     question = payload.get("question")
-    return await container.query_service.ask(question)
+    return container.pinecone_store.search(question)
+    # return await container.query_service.ask(question)
 
 
 @router.post("/upload")

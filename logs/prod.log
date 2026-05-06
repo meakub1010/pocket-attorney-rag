@@ -512,3 +512,25 @@
 {"level": "INFO", "message": "All services has been initialized", "logger": "pocket_attorney_rag", "time": "2026-05-04 22:34:42,895"}
 {"level": "INFO", "message": "Pocket Attorney RAG System API is shutting down", "logger": "pocket_attorney_rag", "time": "2026-05-04 22:45:15,474"}
 {"level": "INFO", "message": "Clean up complete. Uptime: 634.11s", "logger": "pocket_attorney_rag", "time": "2026-05-04 22:45:15,476"}
+{"level": "INFO", "message": "Logger initialized", "logger": "pocket_attorney_rag", "time": "2026-05-05 22:57:05,086"}
+{"level": "INFO", "message": "Pocket Attorney System API starting", "logger": "pocket_attorney_rag", "time": "2026-05-05 22:57:05,089"}
+{"level": "INFO", "message": "Initializing necessary things", "logger": "pocket_attorney_rag", "time": "2026-05-05 22:57:05,089"}
+{"level": "ERROR", "message": "Failed to initialize necessary services", "logger": "pocket_attorney_rag", "time": "2026-05-05 22:57:08,336"}
+{"level": "INFO", "message": "Logger initialized", "logger": "pocket_attorney_rag", "time": "2026-05-05 22:58:48,806"}
+{"level": "INFO", "message": "Pocket Attorney System API starting", "logger": "pocket_attorney_rag", "time": "2026-05-05 22:58:48,809"}
+{"level": "INFO", "message": "Initializing necessary things", "logger": "pocket_attorney_rag", "time": "2026-05-05 22:58:48,809"}
+{"level": "INFO", "message": "All services has been initialized", "logger": "pocket_attorney_rag", "time": "2026-05-05 22:58:50,409"}
+{"level": "INFO", "message": "Pocket Attorney RAG System API is shutting down", "logger": "pocket_attorney_rag", "time": "2026-05-05 23:00:25,799"}
+{"level": "INFO", "message": "Clean up complete. Uptime: 96.99s", "logger": "pocket_attorney_rag", "time": "2026-05-05 23:00:25,800"}
+{"level": "INFO", "message": "Logger initialized", "logger": "pocket_attorney_rag", "time": "2026-05-05 23:00:30,009"}
+{"level": "INFO", "message": "Pocket Attorney System API starting", "logger": "pocket_attorney_rag", "time": "2026-05-05 23:00:30,011"}
+{"level": "INFO", "message": "Initializing necessary things", "logger": "pocket_attorney_rag", "time": "2026-05-05 23:00:30,011"}
+{"level": "INFO", "message": "All services has been initialized", "logger": "pocket_attorney_rag", "time": "2026-05-05 23:00:32,552"}
+{"level": "INFO", "message": "Pocket Attorney RAG System API is shutting down", "logger": "pocket_attorney_rag", "time": "2026-05-05 23:01:47,949"}
+{"level": "INFO", "message": "Clean up complete. Uptime: 77.94s", "logger": "pocket_attorney_rag", "time": "2026-05-05 23:01:47,950"}
+{"level": "INFO", "message": "Logger initialized", "logger": "pocket_attorney_rag", "time": "2026-05-05 23:01:52,069"}
+{"level": "INFO", "message": "Pocket Attorney System API starting", "logger": "pocket_attorney_rag", "time": "2026-05-05 23:01:52,072"}
+{"level": "INFO", "message": "Initializing necessary things", "logger": "pocket_attorney_rag", "time": "2026-05-05 23:01:52,072"}
+{"level": "INFO", "message": "All services has been initialized", "logger": "pocket_attorney_rag", "time": "2026-05-05 23:01:53,586"}
+{"level": "INFO", "message": "Pocket Attorney RAG System API is shutting down", "logger": "pocket_attorney_rag", "time": "2026-05-05 23:17:46,061"}
+{"level": "INFO", "message": "Clean up complete. Uptime: 953.99s", "logger": "pocket_attorney_rag", "time": "2026-05-05 23:17:46,065"}
