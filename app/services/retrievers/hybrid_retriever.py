@@ -4,12 +4,16 @@ logger = logging.getLogger(__name__)
 
 
 class HybridRetriever:
-    def __init__(self, vector_store, bm25_store):
+    def __init__(self, vector_store, bm25_store, pinecone_store):
         self.vector_store = vector_store
         self.bm25_store = bm25_store
+        self.pinecone_store = pinecone_store
+    async def retrieve_from_pinecone(self, question, k):
+        return self.pinecone_store.search(question, k)
 
     async def retrieve(self, question, q_embedding, k=10):
-        vector_results = self.vector_store.search(q_embedding, k)
+        # vector_results = self.vector_store.search(q_embedding, k)
+        vector_results = self.pinecone_store.search(question, k)
 
         bm25_results = self.bm25_store.search(question, k)
         vector_results = [

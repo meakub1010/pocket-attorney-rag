@@ -29,8 +29,8 @@ class PineconeStore:
                 "article": match.metadata.get("article", ""),
                 "title": match.metadata.get("title", ""),
                 "category": match.metadata.get("category", ""),
-                "score": match.score
+                "faiss_score": match.score
             })
-        logger.info("vector_results_count=%d", len(output))
+        logger.info("pinecone_results_count=%d", len(output))
 
         return output

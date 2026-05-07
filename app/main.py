@@ -60,7 +60,7 @@ async def lifespan(app: FastAPI):
         bm25_store.load(settings.index_path)
 
         semantic_cache = SemanticCache(redis_client, embedder)
-        retriever = HybridRetriever(vector_store, bm25_store)
+        retriever = HybridRetriever(vector_store, bm25_store, pinecone_store)
 
         rag_pipeline = RagPipeline(retriever, embedder)
         llm_client = get_llm_provider()

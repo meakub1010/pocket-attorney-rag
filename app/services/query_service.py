@@ -25,12 +25,15 @@ class QueryService:
 
         logger.info("cache_miss")
 
-        results = await self.rag_pipeline.retrieve(question, q_embedding)
-        if not results:
+        # results = await self.rag_pipeline.retrieve(question, q_embedding)
+        pinecone_results = await self.rag_pipeline.retrieve(question, q_embedding)
+        if not pinecone_results:
             return {"question": question, "answers": []}
 
-        prompt = build_legal_prompt(question, results)
+        prompt = build_legal_prompt(question, pinecone_results)
         llm_response: LLMResponse = await self.llm.complete(prompt)
+
+        print("llm_response: ",llm_response)
 
         formatter_response = LLMFormatter.format_to_markdown(llm_response.content)
 
@@ -40,6 +43,9 @@ class QueryService:
                 "source": result["article"],
                 "docs": result["answer"],
                 "category": result["category"],
+                # "score": float(
+                #     result.get("score")
+                # )
                 "score": float(
                     result.get("final_score")
                     or result.get("vector_score")
@@ -47,7 +53,7 @@ class QueryService:
                     or 0.0
                 ),
             }
-            for result in results
+            for result in pinecone_results
         ]
         final_result = {
             "question": question,
