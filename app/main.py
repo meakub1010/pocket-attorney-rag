@@ -51,8 +51,8 @@ async def lifespan(app: FastAPI):
         chunker = get_chunker()
         embedder = EmbeddingService()
 
-        vector_store = VectorStore(dim=embedder.dim)
-        vector_store.load(settings.index_path)
+        # vector_store = VectorStore(dim=embedder.dim)
+        # vector_store.load(settings.index_path)
 
         pinecone = Pinecone(api_key=os.getenv("PINECONE_API_KEY"))
         pinecone_store = PineconeStore(pinecone, "kb-index", embedder)
@@ -60,7 +60,7 @@ async def lifespan(app: FastAPI):
         bm25_store.load(settings.index_path)
 
         semantic_cache = SemanticCache(redis_client, embedder)
-        retriever = HybridRetriever(vector_store, bm25_store, pinecone_store)
+        retriever = HybridRetriever(bm25_store, pinecone_store)
 
         rag_pipeline = RagPipeline(retriever, embedder)
         llm_client = get_llm_provider()
