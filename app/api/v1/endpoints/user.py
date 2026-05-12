@@ -18,6 +18,7 @@ router = APIRouter()
 class TokenResponse(BaseModel):
     access_token: str
     token_type: str
+    jti: str
 
 
 @router.post("/register", response_model=UserOut)
@@ -33,12 +34,14 @@ def login(user: UserLogin, db: Session = Depends(get_db)):
     if not db_user:
         raise HTTPException(status_code=401, detail="Incorrect email or password")
 
-    token = create_access_token({"sub": str(db_user.id), "role": "user"})
-
-    print(f"Token: {token}")
+    token, jti = create_access_token(
+        user_id=str(db_user.id),
+        tier=db_user.tier,
+    )
     return {
         "access_token": token,
         "token_type": "bearer",
+        "jti": jti
     }
 
 

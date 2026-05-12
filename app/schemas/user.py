@@ -1,3 +1,6 @@
+from datetime import datetime
+from typing import Optional
+from uuid import UUID
 from pydantic import BaseModel, EmailStr
 
 
@@ -20,10 +23,14 @@ class UserUpdate(BaseModel):
 
 
 class UserOut(BaseModel):
-    id: int
-    first_name: str
-    last_name: str
+    id: UUID  # ← was int, change to UUID
+    first_name: Optional[str] = None
+    last_name: Optional[str] = None
     email: EmailStr
+    tier: str = "free"
+    is_active: bool
+    is_verified: bool
+    created_at: datetime
 
     class Config:
         from_attributes = True

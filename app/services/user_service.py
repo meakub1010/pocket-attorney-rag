@@ -4,13 +4,23 @@ from app.core.security import hash_password, verify_password
 
 
 def create_user(
-    db: Session, first_name: str, last_name: str, email: str, password: str
+        db: Session,
+        first_name: str,
+        last_name: str,
+        email: str,
+        password: str,
+        tier: str = "free",
+        is_active: bool = True,
+        is_verified: bool = False
 ):
     user = User(
         first_name=first_name,
         last_name=last_name,
         email=email,
         password=hash_password(password),
+        tier=tier,
+        is_active=is_active,
+        is_verified=is_verified
     )
     db.add(user)
     db.commit()
